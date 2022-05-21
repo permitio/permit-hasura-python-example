@@ -12,14 +12,14 @@ from permit.sync import Permit
 from permit.enforcement.interfaces import UserInput
 
 
-HASURA_URL = "https://proper-impala-51.hasura.app/v1/graphql"
-HASURA_HEADERS = {"X-Hasura-Admin-Secret": "4PXJozLBLF1glLpR3BUOT14OSfimw9koeoAScKK05svKszM5h7NpEOLZ6TQW5aBd"}
+HASURA_URL = "https://YourHasuraDomain/v1/graphql"
+HASURA_HEADERS = {"X-Hasura-Admin-Secret": "<Your Hasura Token>"}
 JWT_SECRET = os.getenv("HASURA_GRAPHQL_JWT_SECRET", "a-very-secret-secret")
 
 permit = Permit(
     pdp="http://localhost:7766",
     #Permit secert
-    token="eyJhbGciOiJSUzI1NiIsImtpZCI6IjRjYjFhYjYyLWVhZTctNDFmZS04NWMwLTAyZjFlNjMyN2FlZCIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDk5MjQ5MzAsImV4cCI6MTY4MTM3NDUzMCwiYXVkIjoiaHR0cHM6Ly9hcGkucGVybWl0LmlvL3YxLyIsImlzcyI6Imh0dHBzOi8vYXV0aC5wZXJtaXQuaW8vIiwic3ViIjoiMWJhM2EwYTMxMzk4NDYxNjk0Y2E2MTkxODdkNTZkODAifQ.Br_7laLVkcVCB5wDaXHoAMITSOCe-SPjm6VJD96h_cTSHCxlRD4q_DrCxS-kRN3K7mj8oYpThh7danKctAqDFaNN5nVp2_zgxxcKmgP-e_AkO3NSD4PSO4FSQVlBdZGqrfp7lt4K5ZECge2KWUIHQEtGUa8adNyI_LnE2q5X1DbKfRxS3DvaCGK_Bf_t-Xt26e_asynyuSOaveuM8i4_vJ6o9woukAa-3ZwWa4EtRlXsirvNU1xQTRghzZU8lzjll4noT8zSjDjZ6jsBBXEWCi26BoHMamqMj46rYWy5l7q3y3vL3xU1cFGeKWiXi1M6c-q2X1iomrnFBmKDpPSilVVSba07o3Muh5lOvzOIgU53Xcproj2XQIY-7-N-B_6Q05pFjMvUxahaq2DOsTPQtsjkCV-x6kOGN6DoMXTWm2zBuZhrSrxDECHFhTq32FNiwe5N77AuQvJHEUH6VfpcA7LqeKqSUCNhFN_SYfAv3Rxbx7XGn630SYCO0-sgtWYy_mZH3c4KttlssHioFLDukciNvRizHKMXDvF5eeKpYd1isYnr4hVcmWK-77rTvetjkVqcogVJfSvsvbZhol2OmTuN_9FQQX4bjXc30TCtFvw0SHfY2vsVrnbCR11UxYJfxBqp55TGMz6XvvempyQj4-7p4inV8h7GXDGkT_FuWeA",
+    token="<Your Permit API Token>",
 )
 
 
@@ -196,7 +196,7 @@ def signup_handler():
         # Let Permit know of the new user
         # We'll use the email as our unique identifier (in Prod a UUID would be better)
         user["key"] = user["email"]
-        # Assign a defult basic role
+        # Assign a default basic role
         user["roles"] = [{"role":"admin", "tenant": "default"}]
         userInput = UserInput(**user)
         # Save to permit
