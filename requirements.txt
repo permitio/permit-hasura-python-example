@@ -1,0 +1,8 @@
+flask
+argon2-cffi
+requests
+pyjwt
+permit
+
+#for util.py
+typer
