@@ -7,7 +7,7 @@ app = typer.Typer()
 def create_user(email:str, password:str):
     request = requests.post(
         "http://localhost:8080/signup", json={"input":{"email": email, "password": password}})
-    assert request.ok, f"Failed with code {request.status_code}"
+    assert request.ok, f"Failed with code {request.status_code}, error: {request.json()}"
     print (request.json())
 
 
@@ -15,7 +15,7 @@ def create_user(email:str, password:str):
 def login(email:str, password:str):
     request = requests.post(
         "http://localhost:8080/login", json={"input":{"email": email, "password": password}})
-    assert request.ok, f"Failed with code {request.status_code}"
+    assert request.ok, f"Failed with code {request.status_code}, error: {request.json()}"
     return request.json()
 
 
@@ -24,7 +24,7 @@ def list_animals(email:str, password:str):
     token = login(email, password)
     request = requests.get(
         "http://localhost:8080/animals", json={"input":{"email": email, "password": password}}, headers={"Authorization": f"Bearer {token['token']}"})
-    assert request.ok, f"Failed with code {request.status_code}"
+    assert request.ok, f"Failed with code {request.status_code}, error: {request.json()}"
     print (request.json())
 
 

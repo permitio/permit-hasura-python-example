@@ -162,7 +162,7 @@ class RequestMixin:
 
 @dataclass
 class CreateUserOutput(RequestMixin):
-    id: int
+    id: Optional[int]
     email: str
     password: str
 
@@ -192,15 +192,19 @@ def signup_handler():
     if user_response.get("errors"):
         return {"message": user_response["errors"][0]["message"]}, 400
     else:
+        # returns the hasura user
+        # only has email field and password field
         user = user_response["data"]["insert_user_one"]
-        # Let Permit know of the new user
-        # We'll use the email as our unique identifier (in Prod a UUID would be better)
-        user["key"] = user["email"]
-        # Assign a default basic role
-        user["roles"] = [{"role":"admin", "tenant": "default"}]
-        userInput = UserInput(**user)
+
+        permit_user = {
+            "key": user["email"],
+            # the roles field contains initial roles (will only be assigned when the user is created),
+            # these roles are ignored if permit already knows a user with such key.
+            # we will assign the role "admin" in the tenant "default"
+            "roles": [{"role":"admin", "tenant": "default"}],
+        }
         # Save to permit
-        permit.write(permit.api.sync_user(userInput))
+        permit.write(permit.api.sync_user(UserInput(**permit_user)))
         return CreateUserOutput(**user).to_json()
     
 
@@ -230,7 +234,11 @@ def list_animals():
         else:        
             return make_response(jsonify({
                 'message': 'Not allowed'
-            } )), 403   
+            } )), 403
+        
+        # if you assigned a role in another tenant (not the default tenant),
+        # you need to pass the resource as a dict to signify it belongs in another tenant:
+        # permit.check(id, "list", {"type": "animals", "tenant": "default"})
 
     except jwt.DecodeError:
         return {"message": "Invalid token"}, 401
